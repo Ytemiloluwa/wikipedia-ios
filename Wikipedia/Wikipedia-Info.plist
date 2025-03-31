@@ -67,6 +67,7 @@
 	<string>Save photos from Wikipedia to your photo library</string>
 	<key>NSUserActivityTypes</key>
 	<array>
+		<string>$(PRODUCT_BUNDLE_IDENTIFIER).searchIntent</string>
 		<string>org.wikimedia.wikipedia.explore</string>
 		<string>org.wikimedia.wikipedia.settings</string>
 		<string>org.wikimedia.wikipedia.saved</string>
@@ -74,6 +75,13 @@
 		<string>org.wikimedia.wikipedia.search</string>
 		<string>org.wikimedia.wikipedia.article</string>
 		<string>org.wikimedia.wikipedia.searchresults</string>
+	</array>
+	<key>AppIntents</key>
+	<array>
+		<dict>
+			<key>IntentClassName</key>
+			<string>$(PRODUCT_MODULE_NAME).WikipediaSearchIntent</string>
+		</dict>
 	</array>
 	<key>UIAppFonts</key>
 	<array>
@@ -132,5 +140,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+	<key>UIUserInterfaceStyle</key>
+	<string>Automatic</string>
 </dict>
 </plist>
