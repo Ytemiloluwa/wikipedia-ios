@@ -16,6 +16,8 @@ extern NSString *const WMFLanguageVariantAlertsLibraryVersion; // NSNumber
 @property (nonatomic, readonly) WMFTheme *theme;
 @property (nonatomic, readonly) MWKDataStore *dataStore;
 
+- (nullable UIViewController *)searchViewControllerForAppIntents;
+
 - (void)launchAppInWindow:(UIWindow *)window waitToResumeApp:(BOOL)waitToResumeApp;
 
 - (void)showSplashView;

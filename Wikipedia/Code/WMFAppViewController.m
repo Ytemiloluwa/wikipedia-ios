@@ -2149,4 +2149,8 @@ static NSString *const WMFDidShowOnboarding = @"DidShowOnboarding5.3";
     });
 }
 
+- (UIViewController *)searchViewControllerForAppIntents {
+    return self.searchViewController;
+}
+
 @end

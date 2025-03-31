@@ -92,7 +92,25 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let appViewController else {
             return
         }
+    
+        // Special handling for search from App Intent
+        if userActivity.activityType == "org.wikimedia.wikipedia.search",
+           let searchTerm = userActivity.userInfo?["WMFSearchTerm"] as? String {
+            appViewController.selectedIndex = 4 
+            if let searchViewController = appViewController.searchForAppIntents() as? SearchViewController {
+                searchViewController.searchTerm = searchTerm
+
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    searchViewController.search()
+                }
+                if appNeedsResume {
+                    resumeAppIfNecessary()
+                }
+                return
+            }
+        }
         
+        // Default handling for other activities
         appViewController.showSplashView()
         var userInfo = userActivity.userInfo
         userInfo?[WMFRoutingUserInfoKeys.source] = WMFRoutingUserInfoSourceValue.deepLinkRawValue
@@ -131,6 +149,56 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         guard let firstURL = URLContexts.first?.url else {
             return
+        }
+        
+        if firstURL.host?.contains("wikipedia.org") == true && firstURL.path.contains("/wiki/Special:Search") {
+            if let components = URLComponents(url: firstURL, resolvingAgainstBaseURL: false),
+               let queryItems = components.queryItems,
+               let term = queryItems.first(where: { $0.name == "search" })?.value {
+                appViewController.selectedIndex = 4
+            
+                if let searchViewController = appViewController.searchForAppIntents() as? SearchViewController {
+                    // Initiate search
+                    searchViewController.searchTerm = term
+                    searchViewController.search()
+                  }
+//                } else {
+//                    print("Wikipedia Web Search: Failed to get SearchViewController")
+//                }
+                return
+            }
+        }
+        // Handle search intent URL
+        if firstURL.scheme == "wikipedia" && firstURL.host == "search" {
+            if let components = URLComponents(url: firstURL, resolvingAgainstBaseURL: false),
+               let queryItems = components.queryItems,
+               let term = queryItems.first(where: { $0.name == "term" })?.value {
+                
+                appViewController.selectedIndex = 4
+            
+                if let searchViewController = appViewController.searchForAppIntents() as? SearchViewController {
+                    searchViewController.searchTerm = term
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        searchViewController.search()
+                    }
+                    
+                    if appNeedsResume {
+                        resumeAppIfNecessary()
+                    }
+                } else {
+                    print("Wikipedia App Intent: Failed to get SearchViewController")
+                    let userActivity = NSUserActivity(activityType: "org.wikimedia.wikipedia.search")
+                    userActivity.userInfo = ["WMFSearchTerm": term]
+                    appViewController.processUserActivity(userActivity, animated: false) { [weak self] in
+                        if self?.appNeedsResume ?? false {
+                            self?.resumeAppIfNecessary()
+                        }
+                    }
+                }
+                return
+            } else {
+                print("Wikipedia App Intent: Failed to extract search term from URL: \(firstURL)")
+            }
         }
         
         guard let activity = NSUserActivity.wmf_activity(forWikipediaScheme: firstURL) ?? NSUserActivity.wmf_activity(for: firstURL) else {
