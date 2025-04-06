@@ -1032,6 +1032,12 @@
 "search-recent-title" = "Title for list of recent search terms";
 "search-result-redirected-from" = "Text for search result letting user know if a result is a redirect from another article. Parameters: * $1 - article title the current search result redirected from";
 "search-title" = "Title for search interface. {{Identical|Search}}";
+"search-widget-description" = "Description of the Search Widget";
+"search-widget-no-recent-searches" = "Message shown when there are no recent searches in the Search Widget";
+"search-widget-recent-searches" = "Header for recent searches section in the Search Widget";
+"search-widget-search-wikipedia" = "Prompt to search Wikipedia in the Search Widget";
+"search-widget-tap-to-search" = "Instruction to tap the widget to search";
+"search-widget-title" = "Title of the Search Widget";
 "serbian-variants-alert-body" = "Body text of alert used to inform users about Serbian variant support. Please do not translate the newlines (\n) or Serbian characters (nсрпски ћирилица, etc.).";
 "serbian-variants-alert-title" = "Title of alert used to inform users about Serbian variant support.";
 "settings-account" = "Title for button and page letting user view their account page.";
